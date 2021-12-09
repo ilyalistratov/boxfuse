@@ -3,6 +3,7 @@ pipeline {
 
     docker {
       image 'cyberstel/app'
+      args '-v /var/run/docker.sock:/var/run/docker.sock -u root '
     }
 
   }
@@ -24,8 +25,7 @@ pipeline {
     stage('Make docker image') {
       steps {
         sh 'ls'
-       // sh 'docker build -t box .'
-        sh 'cp /var/lib/jenkins/workspace/deploy_war_in_docker/target/hello-1.0.war cyberstel/app && cd cyberstel/app && docker build -t app .'
+        sh 'scp /var/lib/jenkins/workspace/deploy_war_in_docker/target/hello-1.0.war root@51.12.216.138:/var/lib/tomcat9/webapps'
      //   sh 'docker tag box cyberstel/app'
       //  sh 'docker box'
       //  sh '''docker tag box cyberstel/box:0.1.0 && docker push cyberstel/box:0.1.0'''
@@ -44,7 +44,5 @@ pipeline {
 //      }
 //    }
   }
-  triggers {
-    pollSCM('*/1 H * * *')
-  }
+
 }
